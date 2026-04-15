@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                dir('mavenApp') {
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                dir('mavenApp') {
+                    sh 'mvn test'
+                }
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                dir('mavenApp') {
+                    sh 'mvn clean package'
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            junit 'mavenApp/target/surefire-reports/*.xml'
+            archiveArtifacts artifacts: 'mavenApp/target/*.jar', allowEmptyArchive: true
+        }
+    }
+}
