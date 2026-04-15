@@ -11,7 +11,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('mavenApp') {
-                    bat 'mvn clean compile'
+                    bat 'mvn clean install'  // Changed from sh to bat
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Test') {
             steps {
                 dir('mavenApp') {
-                    bat 'mvn test'
+                    bat 'mvn test'  // Changed from sh to bat
                 }
             }
         }
@@ -27,16 +27,9 @@ pipeline {
         stage('Package') {
             steps {
                 dir('mavenApp') {
-                    bat 'mvn clean package'
+                    bat 'mvn package'  // Changed from sh to bat
                 }
             }
-        }
-    }
-    
-    post {
-        always {
-            junit 'mavenApp/target/surefire-reports/*.xml'
-            archiveArtifacts artifacts: 'mavenApp/target/*.jar', allowEmptyArchive: true
         }
     }
 }
